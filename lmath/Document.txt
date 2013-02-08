@@ -1,0 +1,68 @@
+Class matrix{
+//		create a new matrix with xm rows; xn columes; and the data by a string impmt (see method inputmt)
+public function matrix(xm:Number=1,xn:Number=1,inpmt:String="") {
+
+//		number of rows
+public var m:Number;
+
+//		number of columes
+public var n:Number;
+
+//		this is the data set of the matrix
+public var mt:Array= new Array();
+
+//      return a string by folow this order: element1+" "+element2+" "+....+last element of a row
+public function tracemt():String{
+
+//		input to matrix by a string that folow this order: element1+" "+element2+" "+....+last element of a row
+public function inputmt(str:String):void{
+
+// 		swap row px by py
+public function swaprow(px:Number,py:Number):void{
+
+//		multi row px by number k
+public function rsmulti(px:Number,k:Number):void{
+
+//		plus rox px by k time py
+public function rplusk(px:Number,py:Number,k:Number):void{
+		
+/****************Static function******************/
+
+//		return matrix transpose of matrix m1
+public static function trans(m1:matrix):matrix{
+
+//		return matrix result of matrix m1 + matrix m2
+public static function plus(m1:matrix,m2:matrix):matrix{
+
+//		return matrix result of matrix m1 product scaler k
+public static function smulti(m1:matrix,k:Number):matrix{
+
+//		return matrix result of matrix m1 - matrix m2
+public static function minus(m1:matrix,m2:matrix):matrix{
+
+//		return matrix result of matrix m1 * matrix m2
+public static function multi(m1:matrix,m2:matrix):matrix{
+
+//		return matrix obtain from matrix m1 by remove row ii colum ij
+public static function mini(m1:matrix,ii:Number,ij:Number):matrix{
+
+//		return determinant of matrix m1
+public static function det(m1:matrix):Number{
+
+//		return a mini square matrix degree p by remove rows and columes at the right and bottom
+public static function smini(m1:matrix,p:Number):matrix{
+
+//		return rank of matrix m1
+public static function rank(m1:matrix):Number{
+
+//		return matrix inverse of matrix m1
+public static function inverse(m1:matrix):matrix{
+
+//		return a matrix by put matrix m2 at the right of m1
+public static function add(m1:matrix,m2:matrix):matrix{
+
+//		return a matrix by replace colume p of matrix m1 by the colume q of matrix m2
+public static function creplace(m1:matrix,p:Number,m2:matrix,q:Number=1):matrix{
+
+//		return a matrix as a result of equation Ax=B
+public static function solve(m1:matrix,m2:matrix):matrix{

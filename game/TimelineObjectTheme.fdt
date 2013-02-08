@@ -1,0 +1,81 @@
+	/**
+	 * Timeline interface
+	 * @author HD.TVA
+	 */
+	
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import graph.Paint;
+	
+	
+		public function ClassName(/*own properties input here,*/sp:Sprite=null,container:DisplayObjectContainer=null,interactList:Array=null) 
+		{
+			
+			//own properties input code here
+			
+			if (sp == null) { sprite = new Sprite(); createBasicVisual(); }
+			else sprite = sp;
+			if (container != null) { container.addChild(sprite); activate(); }
+			if ( interactList == null) list = new Array();
+			else { 
+				list = interactList; 
+				//You may wanna add here: list.push(this)
+			}
+			
+			//own properties intergrated input code here
+			
+		}
+		/*make the circle become active*/
+		public function activate():void {
+			//You may wanna add here: dt = 1 / sprite.stage.frameRate;
+			available = true;
+			sprite.addEventListener(Event.ENTER_FRAME, step);
+		}
+		/*opposite with activate()*/
+		public function deactivate():void {
+			available = false;
+			sprite.removeEventListener(Event.ENTER_FRAME, step);
+		}
+		/*Available for interaction*/
+		public var available:Boolean=true;
+		
+		
+		/*GUI*/
+		public var sprite:Sprite;
+		/*List of object under control*/
+		public var list:Array;
+		
+		/*Time line property
+		Controll objects in the list*/
+		public function step(evt:Event):void{
+			action(); 
+			for each (var obj:* in list) inter(obj);
+		}
+		
+		/*Action of ...
+		You should override this function to create a new activity for inherited class but besure that the custom function should have no param
+		Note: There is a basic method for Action that u may wannna use*/
+		protected function action():void {
+			
+			//code here
+			
+		}
+		/*Interaction of ... 
+		You should override this function to create a new interactivity for inherited class but besure that the custom function should have only 1 param
+		Note: There are few basic method for Interaction that u may wannna use and remember to check the object is not itself? and available?*/
+		protected function inter(ob:*):void {
+			if(ob!==this&&ob.available){//you may wanna change this condition or remove it!
+			
+				//code here
+			
+			}
+		}
+
+		
+		public function createBasicVisual():void {
+			sprite.graphics.clear();
+			//code here
+			
+		}
+	

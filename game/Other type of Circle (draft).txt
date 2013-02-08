@@ -1,0 +1,271 @@
+	/**
+		 * Test elastic colid (99%)
+		 * @param ob
+		 * 
+		 */
+		private function elasticColidTest(ob:Object):void{
+			var dp:Vector2D=ob.p.minus(this.p);
+			var sumR:Number=this.r+ob.r;
+			if(dp.length<sumR){
+			dp=Vector2D.createFromAgl( ke*(sumR-dp.length),dp.angle );
+			this.v=this.v.minus(dp.div(this.m));
+			ob.v=ob.v.plus(dp.div(ob.m));
+			}
+			
+		}
+		/**
+		 * Test energyField Action (not completed)
+		 * 
+		 */
+		private function energyFieldActionTest():void{
+			this.r+=ker;
+			if(this.r>this.rt)r=rt;
+			this.createBasicVisual(0);
+		}
+		/**
+		 * Test energyField Colid (not Completed)
+		 * @param ob
+		 * 
+		 */
+		private function energyFieldColidTest(ob:Object):void{
+			var dp:Vector2D=ob.p.minus(this.p);
+			var sumR:Number=this.r+ob.r;
+			if(dp.length<sumR){
+				this.r=dp.length-ob.r;
+				dp=Vector2D.createFromAgl( ke*(this.rt+ob.r-dp.length),dp.angle );
+				this.v=this.v.minus(dp.div(this.m));
+				ob.v=ob.v.plus(dp.div(ob.m));
+			}
+		}
+		
+		
+		
+		
+		
+package game
+{
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import game.event.Colision;
+	
+	import graph.Paint;
+	
+	import mathematic.Vector2D;
+	import mathematic.math;
+	import mathematic.solver.checkColid2Circle;
+	import mathematic.solver.solveHardColid2D;
+
+	/**
+	 * A former contaner object for display object to simulate physic'properties.
+	 * @author HD.TVA
+	 */
+	
+	public class CircleMaterial
+	{
+		public function CircleMaterial(size:Number=10,mass:Number=10,sp:Sprite=null,container:DisplayObjectContainer=null,interactList:Array=null)
+		{
+			r=size;m=mass;
+			if (sp == null) { sprite = new Sprite(); createBasicVisual(); }
+			else sprite = sp;
+			if (container != null) { container.addChild(sprite); activate(); }
+			if ( interactList == null) list = new Array();
+			else { list = interactList; list.push(this); }
+			sprite.addEventListener(CircleMaterial.colid,basicColisionHandle);
+		}
+		/*you should use this function instead of addChild()*/
+		public function attachTo(container:DisplayObjectContainer):void {
+			container.addChild(sprite); 
+			activate();
+		}
+		
+		/*make the circle become active*/
+		public function activate():void {
+			dt = 1 / sprite.stage.frameRate;
+			available = true;
+			sprite.addEventListener(Event.ENTER_FRAME, step);
+		}
+		/*opposite with activate()*/
+		public function deactivate():void {
+			available = false;
+			sprite.removeEventListener(Event.ENTER_FRAME, step);
+		}
+		
+		
+		
+		// moving object propeties
+		
+		//public var p:Vector2D intergrated with sprite's possition
+		public function set p(val:Vector2D):void {
+			sprite.x = val.x;
+			sprite.y = val.y;
+		}
+		/*vector possition*/
+		public function get p():Vector2D {
+			return new Vector2D(sprite.x, sprite.y);
+		}
+		
+		public var v:Vector2D=new Vector2D(0,0);
+		/*delta t per step (time's scale) */
+		public var dt:Number=1;
+		
+		/*visible represted object properties*/
+		public var sprite:Sprite;
+		
+		
+		
+		// physic object propeties
+		/*Radius*/
+		public var r:Number=0;
+		/*Mass*/
+		public var m:Number=0;
+		// k elastic (testing)
+		public var ke:Number=10;
+		// true radius (testing)
+		public var rt:Number=10;
+		// k expand radius (testing)
+		public var ker:Number=1;
+		
+		
+		// others properties
+		/*Available for interaction*/
+		public var available:Boolean=true;
+		/*List of interact objects*/
+		public var list:Array;
+		
+		public function toString():String{
+			return "Circle: "+m+"g "+r+"px P="+p+" V="+v;
+		}
+		
+		public function step(evt:Event):void{
+			basicAction(); 
+			//energyFieldActionTest();
+			for each (var obj:CircleMaterial in list) inter(obj);
+			
+		}
+		public function inter(ob:CircleMaterial):void{
+			
+			if(this.v.square< CircleMaterial.howisFast )basicInteraction(ob); // for slow movement
+			else basicInteraction2(ob);// for fast movement
+			
+			//energyFieldColidTest(ob);
+		}
+		
+		/**
+		 * Basic Action of Circle Material Object <p>
+		 * Change possition by its velocity 
+		 */
+		public function basicAction():void{
+			p=p.plus(v.multi(dt));
+		}
+		/**
+		 * Basic Interaction <p>
+		 * Check colid and solve (work not properly with fast moving object) 
+		 * @param ob Object to be interact
+		 * 
+		 */
+		public function basicInteraction(ob:CircleMaterial):void{
+			// Check Colid
+			if(ob!==this){
+				var dp:Vector2D=ob.p.minus(this.p);
+				var sumR:Number=this.r+ob.r;
+				// Check Intersection
+				if(dp.length<=sumR){
+					sprite.dispatchEvent(new Colision(this,ob, CircleMaterial.colid));
+				}
+			}
+		}
+		/**
+		 * Basic Interaction 2 (for fast object)<p>
+		 * More accurate than first one but cost more CPU 
+		 * @param ob
+		 * @see basicInteraction
+		 */
+		public function basicInteraction2(ob:CircleMaterial):void{
+			// Check Colid
+			if(ob!==this){
+				// check for the correct Colid posstion
+				var check:checkColid2Circle=new checkColid2Circle(this.p,this.v,this.r,ob.p,ob.v,ob.r,-this.dt);
+				// change possition and process colid
+				if(check.root==1){
+					sprite.dispatchEvent(new Colision(this,ob, CircleMaterial.colid));
+				}else{
+					// Check Intersection
+					var dp:Vector2D=ob.p.minus(this.p);
+					var sumR:Number=this.r+ob.r;
+					if(dp.length<sumR){
+						sprite.dispatchEvent(new Colision(this,ob, CircleMaterial.colid));
+					}
+					
+				}
+				
+				
+			}
+		}
+
+		/**
+		 * Basic colid action.<p>
+		 * Solve colision
+		 */
+		public function basicColidAction(ob:CircleMaterial):solveHardColid2D{
+			if(ob!==this){
+				var solve:solveHardColid2D=new solveHardColid2D(this.p,this.m,this.v,ob.p,ob.m,ob.v);
+				v=v.plus(solve.pva);
+				ob.v=ob.v.plus(solve.pvb);
+				return solve;
+			}else return null;
+		}
+		
+		/*Colid action with correct posstion shifted before colision*/
+		public function basicColidAction2(ob:CircleMaterial):solveHardColid2D{
+			if (ob !== this) {
+				
+				// check for the correct Colid posstion
+					var check:checkColid2Circle=new checkColid2Circle(this.p,this.v,this.r,ob.p,ob.v,ob.r,-this.dt);
+					// change possition 
+					if(check.root==1){
+						this.p=this.p.plus(this.v.multi(check.t));
+						ob.p=ob.p.plus(ob.v.multi(check.t));
+					}else {
+						//intersect
+						var dp:Vector2D=ob.p.minus(this.p);
+						var sumR:Number = this.r + ob.r;
+						
+						var db:Vector2D=Vector2D.createFromAgl((sumR-dp.length)/2,dp.angle);
+						ob.p=ob.p.plus(db);
+						this.p=this.p.plus(db.turn(Math.PI));
+					}
+				// solve colid	
+				return basicColidAction(ob);	
+			}else return null;
+		}
+				
+		/**
+		 * Create a basic Visual <p>
+		 * A circle linethickness = 1
+		 */
+		public function createBasicVisual(lineCl:Number = 0, fill:Boolean = false, fillCl:Number = 0xffffff):void {
+			sprite.graphics.clear();
+			
+			Paint.circle(sprite.graphics,0,0,r,1,lineCl,fill,fillCl);
+		}
+		/*Squareroot of the speed that u may concern about objects pass through eachother*/
+		public static var howisFast:Number = 1000000;
+		Event colision
+		public static var colid:String = "CircleMaterial";
+		
+		/*Handle colid for slow collision*/
+		private function basicColisionHandle(evt:Colision):void {
+			if(evt.subject===this){
+			basicColidAction2(CircleMaterial(evt.object));
+			//trace(evt.subject);
+			//trace(evt.object);
+			}
+		}
+		
+		
+		
+	}
+}
+	

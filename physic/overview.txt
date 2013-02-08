@@ -1,0 +1,149 @@
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fnil\fcharset0 Courier New;}}
+{\colortbl ;\red255\green0\blue0;\red0\green0\blue255;\red0\green0\blue128;}
+{\*\generator Msftedit 5.41.21.2508;}\viewkind4\uc1\pard\lang1033\f0\fs20 ------------------------------------------APE physic 1.0c--------------------------------------------------------\par
+\tab Change log: +Fix bug no impact when v=0;\par
+\tab\tab\tab +Added mode Friction\par
+-----------------------------------------------------------------------------------------------------------------\cf1\par
+draft paper\cf0 .as // file nhap' thuat toan' (draft code)\cf1\par
+\cf0 -----------------------------------------------------------------------------------------------------------------\cf1\par
+math\cf0 .as\par
+\tab\tab const \cf2 g\cf0 :Number=9.81;\par
+\tab\tab static function \cf1 deg\cf0 (alpha:Number):Number// chuyen dv degree >> rad\par
+\tab\tab static function \cf1 rad\cf0 (alpha:Number):Number// chuyen dv rad >> degree\par
+\tab\tab static function \cf1 getsex\cf0 (x:Number):Number// xac dinh kieu so am duong hoac = 0\par
+\tab\tab static function \cf1 square\cf0 (x:Number):Number// binh phuong\par
+\tab\tab static function \cf1 distance\cf0 (m:Object,n:Object):Number// tinh khoang cach giua 2 object \par
+\tab\tab static function \cf1 xround\cf0 (x:Number,scale:Number=100):Number// lam` tron` scale= ti? so' lam` tron`\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 point\cf0\par
+\tab\tab public var \cf2 x\cf0 :Number=0;// hoanh do\par
+\tab\tab public var \cf2 y\cf0 :Number=0;// tung do\par
+\tab\tab public function \cf1 point\cf0 (vlx:Number=0,vly:Number=0)// khoi tao point voi cac gia tri\par
+\tab\tab public function get \cf2 show\cf0 ():String// chuoi thong tin la` toa do cua point\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 line\cf0  // class su dung trong tinh toan (phuong trinh duong thang)\par
+\tab\tab public var \cf2 a\cf0 :Number;// tham so 1\par
+\tab\tab public var \cf2 b\cf0 :Number;// tham so 2\par
+\tab\tab public var \cf2 c\cf0 :Number;// tham so 3\par
+\tab\tab public function \cf1 line\cf0 (VLa:Number=1,VLb:Number=1,VLc:Number=0)// khoi tao line voi cac gia tri\par
+\tab\tab public function \cf1 create\cf0 (M:Object,U:vector):void// khoi tao line tu` toa do obj M va` vector U\par
+\tab\tab public function \cf1 distance\cf0 (M:Object):Number// tra ve khoang cach tu obj M toi' dg thang\par
+\tab\tab public function \cf1 shadow\cf0 (M:Object):point// tra ve diem? la` hinh` chieu' vuong goc' cua? obj M len dg thang\par
+\tab\tab public function \cf1 cut\cf0 (L:line):point// tra ve diem? la giao diem? cua? 2 dg` thang?\par
+\tab\tab public function get \cf2 angle\cf0 ():Number// goc cua duong thang?\par
+\tab\tab public function get \cf2 show\cf0 ():String// chuoi thong tin gom` pt dg thang? va` goc' cua dg thang\par
+\tab\tab public function \cf1 check\cf0 (L:line):Number// kiem tra tinh giao hoan voi dg thang #; tra ve` so'( 1 la` cat' 0 la` song song 2 la` trung` )\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 vector\cf0\par
+\tab\tab private const \cf2 pi\cf0 :Number=Math.PI;// so pi\par
+\tab\tab public var \cf2 px\cf0 :Number;// hoanh do\par
+\tab\tab public var \cf2 py\cf0 :Number;// tung do\par
+\tab\tab public var \cf2 time\cf0 :Timer;// bien thoi gian\par
+\tab\tab public function \cf1 vector\cf0 (inp1:Number=0,inp2:Number=0)// nhap px va py luc khoi tao\par
+\tab\tab public function \cf1 multi\cf0 (k:Number):void// nhan he so k\par
+\tab\tab public function \cf1 dot\cf0 (v:vector):Number// tich vo huong\par
+\tab\tab public function \cf1 cross\cf0 (v:vector):Number// thuong vo huong\par
+\tab\tab public function \cf1 plus\cf0 (v:vector):void// cong voi vector v\par
+\tab\tab public function \cf1 minus\cf0 (v:vector):void// tru di vector v\par
+\tab\tab public function \cf1 turn\cf0 (alpha:Number):void// xoay vector 1 goc alpha\par
+\tab\tab public function \cf1 create\cf0 (a:Object,b:Object):void// bien thanh vector noi 2 doi tuong\par
+\tab\tab public function get \cf1 angle\cf0 ():Number// tra ve goc cua vector (-pi<angle<=pi)\par
+\tab\tab public function get \cf1 length\cf0 ():Number// tra ve do dai vector\par
+\tab\tab public function get \cf1 square\cf0 ():Number// tra ve binh phuong do dai\par
+\tab\tab public function \cf1 clear\cf0 ():void// gan toa do vector = (0;0)\par
+\tab\tab public function get \cf1 show\cf0 ():String// tra ve chuoi thong tin gom toa do, do dai, goc cua vector\par
+\tab\tab //------------ graphic functions -----------------\par
+\tab\tab public function \cf1 update\cf0 ():void// cap nhat hinh anh vector\par
+\tab\tab //------------- static functions -----------------\par
+\tab\tab public static function \cf1 multi\cf0 (v:vector,k:Number):vector// nhan vector v voi he so k\par
+\tab\tab public static function \cf1 dot\cf0 (v:vector,v2:vector):Number// tich vo huong 2 vector\par
+\tab\tab public static function \cf1 cross\cf0 (v:vector,v2:vector):Number// thuong vo huong 2 vector\par
+\tab\tab public static function \cf1 plus\cf0 (v:vector,v2:vector):vector// cong 2 vector\par
+\tab\tab public static function \cf1 minus\cf0 (v:vector,v2:vector):vector// tru 2 vector\par
+\tab\tab public static function \cf1 turn\cf0 (v:vector,alpha:Number):vector// xoay vector v 1 goc alpha\par
+\tab\tab public static function \cf1 create\cf0 (a:Object,b:Object):vector// tao ra vector noi giua 2 object\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 material\cf0\par
+\tab\tab public function \cf1 material\cf0 ()\{\}// rong~\par
+\tab\tab public var \cf2 sys\cf0 :system;// system cua object\par
+\tab\tab public function \cf1 quit\cf0 ():void// thoat' khoi? system cua? object\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 system\cf0\par
+\tab\tab public var \cf2 spread\cf0 :Number=200;// chieu rong cua khung system ( wall)\par
+\tab\tab public var \cf2 length\cf0 :Number=200;// chieu dai cua khung system (wall)\par
+\tab\tab public var \cf2 wall\cf0 :Boolean=false;// hieu ung va cham dap tuong\par
+\tab\tab public var \cf2 gravi\cf0 :Boolean=false;// hieu ung trong luc\par
+\tab\tab public var \cf2 g\cf0 :Number=9.81;// hang so hap dan\par
+\tab\tab public var \cf2 fric\cf0 :Boolean=false;// hieu ung ma sat\par
+\tab\tab public var \cf2 n\cf0 :Number=0.98;// hang so ma sat\par
+\tab\tab public var \cf2 p\cf0 :vector=new vector(0,1);// vector trong luc\par
+\tab\tab public var \cf2 time\cf0 :Timer=new Timer(50);// bien thoi gian\par
+\tab\tab private var \cf2 leq\cf0 :Array=new Array();// mang? thiet' bi.\par
+\tab\tab private var \cf2 lmp\cf0 :Array=new Array();// mang? vat the?\par
+\tab\tab public var \cf2 checke\cf0 :Boolean=false;// che do kiem tra nang luong toan phan cua system\par
+\tab\tab public function \cf1 add\cf0 (obj):void// them doi tuong obj la vat the hoac thiet bi\par
+\tab\tab public function \cf1 remove\cf0 (obj):void// go bo doi tuong obj\par
+\tab\tab public function \cf1 start\cf0 ():void// khoi dong he thong\par
+\tab\tab public function \cf1 stop\cf0 ():void// ngung he thong\par
+\tab\tab public function \cf1 system\cf0 (vldelay:Number=50,vlwall:Boolean=false,vlgravi:Boolean=false):void// khoi tao he thong voi cac gia tri\par
+\tab\tab private function \cf1 impactwall\cf0 (mp:mpoint):void// ham` xu? ly va cham tuong`\par
+\tab\tab public function \cf1 impact\cf0 (mp1:mpoint,mp2:mpoint):void// ham` xu? ly va cham giua 2 doi tuong\par
+\tab\tab private function \cf1 gravitational\cf0 (mp:mpoint):void// ham` xu? ly' trong. luc.\par
+\tab\tab private function \cf1 friction\cf0 (mp:mpoint):void// ham` xu? ly' ma sat'\par
+\tab\tab private function \cf1 action\cf0 (event:TimerEvent):void// ham` hoat dong. cua? system (most importan function)\par
+\tab\tab public function \cf1 energy\cf0 ():void// ham` tinh' va` hien? thi. tong? nang luong. cua? cac obj trong system\par
+\tab\tab //------------ graphic functions -----------------\par
+\tab\tab public function \cf1 update\cf0 ():void// cap nhat hinh anh cho khung system\par
+-----------------------------------------------------------------------------------------------------------------\par
+nghiem. cua? pt bao? toan dong nang va dong luong sau va cham. (co' trong ham` xu? ly' impact cua? system )\par
+\cf2 vxn1\cf0 =(\cf1 vx1\cf0 *\cf3 delta\cf1 M\cf0 +2*\cf1 m2\cf0 *\cf1 vx2\cf0 )/\cf3 sum\cf1 M\cf0 ;   \cf3 delta\cf1 M\cf0 =\cf1 m1\cf0 -\cf1 m2\cf0 ; \cf3 sum\cf1 M\cf0 =\cf1 m1\cf0 +\cf1 m2\cf0\par
+\cf2 vxn2\cf0 =(-\cf1 vx2\cf0 *\cf3 delta\cf1 M\cf0 +2*\cf1 m1\cf0 *\cf1 vx1\cf0 )/\cf3 sum\cf1 M\cf0 ;  \cf2 vxn1,vxn2\cf0 : 2 nghiem. \cf1 vx1,vx2\cf0 :van toc ban dau cua 2 vat\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 mpoint\cf0  \cf3 extends \cf1 material\cf0\par
+\tab\tab public var \cf2 disable\cf0 :Boolean=false;// che do ko di chuyen? (khoi luong = vo cung lon)\par
+\tab\tab public var \cf2 untouchable\cf0 :Boolean=false;// che do ko tac dong ( vat the # se di xuyen qua)\par
+\tab\tab public var \cf2 f\cf0 :vector=new vector(0,0);// bien vector luc.\par
+\tab\tab public var \cf2 v\cf0 :vector=new vector(0,0);// bien vector van toc\par
+\tab\tab private var \cf2 mass\cf0 :Number;// khoi luong cua vat the\par
+\tab\tab private var \cf2 kt\cf0 :Number;// kich thuoc cua vat the\par
+\tab\tab public var \cf2 color\cf0 :Number;// mau` cua? vat the? (kieu? hex)\par
+\tab\tab public function set \cf2 m\cf0 (value:Number):void// m=mass\tab\tab\tab\par
+\tab\tab public function get \cf2 m\cf0 ():Number// m=mass\par
+\tab\tab public function set \cf2 size\cf0 (value:Number):void//size=kt\par
+\tab\tab public function get \cf2 size\cf0 ():Number//size=kt\par
+\tab\tab public function \cf1 mpoint\cf0 (inpmass:Number=1,inpsize:Number=10,inpdb:Boolean=false,VLut:Boolean=false)//khoi tao vat the voi gia tri\par
+\tab\tab public function \cf1 action\cf0 ():void// ham hoat dong cua vat the\par
+\tab\tab public function get \cf2 e\cf0 ():Number// gia tri nang luong cua vat the\par
+\tab\tab //------------ graphic functions -----------------\par
+\tab\tab public function \cf1 update\cf0 ():void// cap nhat hinh anh cho vat the\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 rope \cf3 extends \cf1 material\cf0\par
+\tab\tab public var \cf2 l\cf0 :Number;// do dai cua day\par
+\tab\tab public var \cf2 A\cf0 :mpoint;// vat the A cua day\par
+\tab\tab public var \cf2 B\cf0 :mpoint;// vat the B cua day\par
+\tab\tab public var \cf2 e\cf0 :Number=0;// nang luong cua day (=0)\par
+\tab\tab public function \cf1 rope\cf0 (mpA:mpoint,mpB:mpoint,VLl:Number=50)// khoi tao rope voi cac gia tri\par
+\tab\tab public function \cf1 action\cf0 ():void// ham hoat dong cua rope\par
+\tab\tab //------------ graphic functions -----------------\par
+\tab\tab public function \cf1 update\cf0 ():void// cap nhat hinh anh cho rope\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 spring \cf3 extends \cf1 material\cf0\par
+\tab\tab public var \cf2 k\cf0 :Number;// do cung cua loxo\par
+\tab\tab public var \cf2 l\cf0 :Number;// chieu dai ban dau cua loxo\par
+\tab\tab public var \cf2 e\cf0 :Number;// nang luong cua loxo\par
+\tab\tab private var \cf2 ln\cf0 :Number;// chieu dai thuc cua lo xo\par
+\tab\tab public var \cf2 A\cf0 :mpoint=new mpoint();// vat the A cua loxo\par
+\tab\tab public var \cf2 B\cf0 :mpoint=new mpoint();// vat the B cua loxo\par
+\tab\tab public function \cf1 spring\cf0 (inpa:mpoint,inpb:mpoint,inpk:Number=1,inpl:Number=100)// khoi tao loxo voi cac gia tri\par
+\tab\tab public function \cf1 action\cf0 ():void// ham hoat dong cua loxo\par
+\tab\tab //------------ graphic functions -----------------\par
+\tab\tab public function \cf1 update\cf0 ():void// cap nhat hinh anh cho loxo\par
+-----------------------------------------------------------------------------------------------------------------\par
+\cf3 class \cf1 force \cf3 extends \cf1 material\cf0\par
+\tab\tab public var \cf2 o\cf0 :mpoint;// doi tuong cua luc\par
+\tab\tab public var \cf2 f\cf0 :vector;// vector luc\par
+\tab\tab public function \cf1 force\cf0 (VLmp:mpoint,VLpx:Number=0,VLpy:Number=0)// khoi tao luc. voi cac gia tri\par
+\tab\tab public function \cf1 action\cf0 ():void// ham hoat dong\par
+-----------------------------------------------------------------------------------------------------------------\par
+}
+ 

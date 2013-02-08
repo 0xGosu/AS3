@@ -1,0 +1,99 @@
+private function TouchBeginHandle(evt:TouchEvent):void {
+			//trace(evt.touchPointID);
+			if (!firstTouch.ID) {
+				//recognize first touch point
+				firstTouch.begin(evt);
+				//trace("FirstPointBegin "+firstTouch.beginState);
+				//add event listener if no touch available
+				if (!secondTouch.ID) {
+					sprite.addEventListener(TouchEvent.TOUCH_MOVE, TouchMoveHandle);
+					sprite.addEventListener(TouchEvent.TOUCH_END, TouchEndHandle);
+					sprite.stage.addEventListener(TouchEvent.TOUCH_MOVE, TouchMoveStageHandle);
+					sprite.stage.addEventListener(TouchEvent.TOUCH_END, TouchEndStageHandle);
+				}
+			}else {
+				if (!secondTouch.ID) {
+					//recoginze touch point 2
+					secondTouch.begin(evt);
+					//trace("SecondPointBegin "+secondTouch.beginState);
+				}	
+			}
+			
+		}
+		private function TouchEndHandle(evt:TouchEvent):void {
+			if (evt.touchPointID == firstTouchPoint) { 
+			/*
+			sprite.stopTouchDrag(evt.touchPointID);
+			var V:Vector2D = speedC.lastSpeed.multi(xspeed);
+			if (V.length > speedHandicap) V = Vector2D.createFromAgl(speedHandicap, V.angle);
+			speedC.deactivate();
+			
+			sprite.dispatchEvent(new ThrowEvent(FlexMaterial.eventTouchThrow, V));
+			
+			sprite.stage.removeEventListener(TouchEvent.TOUCH_END, TouchEndHandle);
+			sprite.stage.removeEventListener(TouchEvent.TOUCH_MOVE, TouchMoveHandle);
+			
+			sprite.addEventListener(MouseEvent.MOUSE_DOWN, MouseDownHandle);*/
+				//end firstTouch
+				firstTouch.end(evt);
+			}
+			if (evt.touchPointID == secondTouchPoint) secondTouch.end(evt);
+		}
+		private function TouchMoveHandle(evt:TouchEvent):void {
+			if (evt.touchPointID == firstTouch.ID) {
+				
+			/*if (sprite.mouseX*sprite.scaleX < -outDrag || sprite.mouseX*sprite.scaleX > sprite.width + outDrag || sprite.mouseY*sprite.scaleY < -outDrag || sprite.mouseY*sprite.scaleY > sprite.height + outDrag) {
+				
+				sprite.stopTouchDrag(evt.touchPointID);
+				speedC.deactivate();
+				
+				sprite.dispatchEvent(new DropEvent(FlexMaterial.eventTouchDrop));
+				
+				sprite.stage.removeEventListener(TouchEvent.TOUCH_END, TouchEndHandle);
+				sprite.stage.removeEventListener(TouchEvent.TOUCH_MOVE, TouchMoveHandle);
+			}*/
+				//update first touch location
+				firstTouch.update(evt);
+			}
+			if (evt.touchPointID == secondTouchPoint) {
+				/*// calculate current diffrent between 2 touch
+				var curDif:Vector2D = secondTouch.minus(firstTouch);
+				//calculate rotation
+				var alpha:Number=math.deg(curDif.angle-preDif.angle);
+				//calculate scale
+				var lengthScale:Number = curDif.length / preDif.length;
+				// save curr diffrent vector
+				preDif.copy(curDif);
+				// avoid smallrange touch
+				if (curDif.length < avoidSmallRangeTouch) return;
+				//handle rotatioon
+				rotate(alpha);
+				//handle scale
+				if (lengthScale > 1 && (sprite.width*Xscale * lengthScale > maxWidthHeight || sprite.height*Xscale * lengthScale > maxWidthHeight)) return;
+				if (lengthScale < 1 && (sprite.width*Xscale * lengthScale < minWidthHeight || sprite.height*Xscale * lengthScale < minWidthHeight)) return;
+				scale(Xscale * lengthScale);
+				*/
+				// save secondTouch location
+				secondTouch.update(evt);
+			}
+		}
+		/*
+		private function TouchMoveHandle2(evt:TouchEvent):void {
+			if (evt.touchPointID == firstTouchPoint) {
+				var localTouch:Vector2D = new Vector2D(evt.localX, evt.localY);
+				localTouch.sminus(originalCenterPoint);
+				rotateTo(sprite.rotation+math.deg(localTouch.angle-lastAngle));
+				
+			}
+		}
+		private function TouchEndHandle2(evt:TouchEvent):void {
+			if (evt.touchPointID == firstTouchPoint) { 
+				firstTouchPoint = 0;
+				sprite.stage.removeEventListener(TouchEvent.TOUCH_END, TouchEndHandle2);
+				sprite.removeEventListener(TouchEvent.TOUCH_MOVE, TouchMoveHandle2);
+			
+				sprite.addEventListener(MouseEvent.MOUSE_DOWN, MouseDownHandle);
+			}	
+			if (evt.touchPointID == secondTouchPoint) secondTouchPoint = 0;
+		}
+		*/

@@ -1,0 +1,7 @@
+﻿		private var _VAR:TYPE;
+		public function get VAR():TYPE {
+			return _VAR;
+		}
+		public function set VAR(val:TYPE):void {
+			_VAR = val;
+		}
